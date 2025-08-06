@@ -174,7 +174,7 @@ if __name__ == '__main__':
     # Render 환경에서 포트 설정
     port = int(os.environ.get('PORT', 5000))
     
-    print(f"📱 접속 주소: http://localhost:{port}")
+    print(f"📱 접속 주소: `http://localhost:{port}")
     print("🗺️ 지도 보기: http://localhost:5000/map")
     print("📊 대시보드: http://localhost:5000/dashboard")
     print("🖼️ 이미지 갤러리: http://localhost:5000/gallery")
