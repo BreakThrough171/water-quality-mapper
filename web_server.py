@@ -3,14 +3,23 @@ import os
 from datetime import datetime
 import shutil
 
-app = Flask(__name__)
+# 디버그 정보 출력
+print(f"현재 작업 디렉토리: {os.getcwd()}")
+print(f"템플릿 폴더 경로: {os.path.abspath('web/templates')}")
+print(f"템플릿 폴더 존재 여부: {os.path.exists('web/templates')}")
+print(f"index.html 존재 여부: {os.path.exists('web/templates/index.html')}")
+
+# Render 환경에서의 경로 설정
+template_dir = os.path.abspath('web/templates')
+static_dir = os.path.abspath('web/static')
+
+app = Flask(__name__, 
+           template_folder=template_dir,
+           static_folder=static_dir)
 app.secret_key = 'water_quality_monitor_2024'  # 플래시 메시지용
 
-# 정적 파일 경로 설정
-app.static_folder = 'web/static'
-
 # 이미지 업로드 설정
-UPLOAD_FOLDER = 'web/static/images'
+UPLOAD_FOLDER = os.path.join(static_dir, 'images')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
@@ -19,7 +28,7 @@ def allowed_file(filename):
 def get_latest_map_info():
     """최신 지도 정보를 가져옵니다."""
     try:
-        web_images_dir = 'web/static/images'
+        web_images_dir = UPLOAD_FOLDER
         if not os.path.exists(web_images_dir):
             return None
         
@@ -65,7 +74,7 @@ def dashboard():
 def gallery():
     """이미지 갤러리 페이지"""
     # 이미지 파일 목록 가져오기
-    image_dir = 'web/static/images'
+    image_dir = UPLOAD_FOLDER
     images = []
     
     if os.path.exists(image_dir):
@@ -123,7 +132,7 @@ def upload_image():
 @app.route('/static/images/<filename>')
 def serve_image(filename):
     """이미지 파일 서빙"""
-    return send_from_directory('web/static/images', filename)
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
 @app.route('/api/status')
 def api_status():
@@ -132,13 +141,13 @@ def api_status():
         'status': 'running',
         'timestamp': datetime.now().isoformat(),
         'message': '수질 모니터링 시스템이 정상적으로 실행 중입니다.',
-        'images_count': len([f for f in os.listdir('web/static/images') if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))])
+        'images_count': len([f for f in os.listdir(UPLOAD_FOLDER) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))])
     }
 
 @app.route('/api/images')
 def api_images():
     """이미지 목록 API"""
-    image_dir = 'web/static/images'
+    image_dir = UPLOAD_FOLDER
     images = []
     
     if os.path.exists(image_dir):
