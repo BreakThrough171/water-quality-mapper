@@ -1,0 +1,3 @@
+# 환경부 수질측정망 API 키
+# https://www.data.go.kr/data/15000581/openapi.do 에서 발급받으세요
+WATER_API_KEY=your_api_key_here 

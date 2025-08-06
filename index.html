@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전국 수질 평가 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .map-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .map-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .map-container {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .map-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .legend {
+            background: rgba(255,255,255,0.95);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        .legend h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .description {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .description h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .description ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .description li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .description li:before {
+            content: "🌊 ";
+            margin-right: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .map-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌊 전국 수질 평가 시스템</h1>
+            <p>환경부 수질 DB API를 활용한 전국 시군구별 수질 상태 평가</p>
+        </div>
+
+        <div class="content">
+            <div class="map-section">
+                <h2>📊 전국 수질 평가 지도</h2>
+                <div class="map-container">
+                    <img src="integrated_water_quality_map.png" alt="전국 수질 평가 지도" class="map-image">
+                </div>
+                
+                <div class="legend">
+                    <h3>📋 경보 단계별 색상 구분</h3>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #2E8B57;"></div>
+                        <span>1단계 (0-20%): 수질 우수</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #90EE90;"></div>
+                        <span>2단계 (20-40%): 수질 양호</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #FFFF00;"></div>
+                        <span>3단계 (40-60%): 수질 보통</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #FFA500;"></div>
+                        <span>4단계 (60-80%): 수질 나쁨</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #FF0000;"></div>
+                        <span>5단계 (80-100%): 수질 매우 나쁨</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="description">
+                <h3>🔬 시스템 개요</h3>
+                <ul>
+                    <li><strong>데이터 소스:</strong> 환경부 수질 DB API (국립환경과학원)</li>
+                    <li><strong>평가 항목:</strong> Tp(총인) 99% + Tn(총질소) 1% 가중치 적용</li>
+                    <li><strong>평가 방식:</strong> 백분위 기반 5단계 분류</li>
+                    <li><strong>지도 데이터:</strong> 전국 시군구 행정구역 경계</li>
+                    <li><strong>시각화:</strong> GeoPandas 기반 지도 생성</li>
+                </ul>
+            </div>
+
+            <div class="description">
+                <h3>📈 평가 알고리즘</h3>
+                <ul>
+                    <li><strong>가중 평균 공식:</strong> (Tp × 0.99) + (Tn × 0.01)</li>
+                    <li><strong>백분위 계산:</strong> 전체 지역 중 상대적 순위</li>
+                    <li><strong>5단계 분류:</strong> 20%씩 균등 분할</li>
+                    <li><strong>색상 매핑:</strong> 초록 → 연초록 → 노랑 → 주황 → 빨강</li>
+                </ul>
+            </div>
+
+            <div class="description">
+                <h3>🌐 기술 스택</h3>
+                <ul>
+                    <li><strong>데이터 수집:</strong> Python Requests, 환경부 API</li>
+                    <li><strong>지리 데이터:</strong> GeoPandas, Shapefile</li>
+                    <li><strong>시각화:</strong> Matplotlib, 지도 생성</li>
+                    <li><strong>데이터 처리:</strong> Pandas, NumPy</li>
+                    <li><strong>웹 배포:</strong> GitHub Pages, Static Site</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 전국 수질 평가 시스템 | 환경부 수질 DB API 기반</p>
+            <p>GitHub Pages를 통한 정적 웹사이트 배포</p>
+        </div>
+    </div>
+</body>
+</html> 

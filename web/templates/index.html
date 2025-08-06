@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>질소·인 유출 위험 지역 지도</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .nav-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .nav-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .nav-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .nav-card p {
+            margin-bottom: 25px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(45deg, #00b894, #00a085);
+        }
+        
+        .latest-map-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .latest-map-info h2 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .map-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        }
+        
+        .status {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .status h3 {
+            margin-bottom: 10px;
+            color: #00b894;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-cards {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌊 질소·인 유출 위험 지역 지도</h1>
+            <p>전국 수질 현황을 실시간으로 모니터링하고 분석합니다</p>
+        </div>
+        
+        {% if map_info and map_info.exists %}
+        <div class="latest-map-info">
+            <h2>🗺️ 최신 통합 수질 지도</h2>
+            <p>일주일에 한 번 자동으로 업데이트되는 최신 수질 지도입니다.</p>
+            <div class="map-stats">
+                <div class="stat-item">
+                    <div class="stat-label">파일 크기</div>
+                    <div class="stat-value">{{ map_info.size }}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">업데이트 시간</div>
+                    <div class="stat-value">{{ map_info.date }}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">상태</div>
+                    <div class="stat-value">✅ 최신</div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="/map" class="btn">지도 보기</a>
+                <a href="{{ map_info.url }}" class="btn btn-secondary" target="_blank">이미지 다운로드</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="latest-map-info">
+            <h2>⚠️ 지도 업데이트 필요</h2>
+            <p>아직 지도가 생성되지 않았습니다. 지도 생성을 실행해주세요.</p>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="/map" class="btn">지도 생성</a>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="nav-cards">
+            <div class="nav-card">
+                <h2>🗺️ 질소·인 유출 위험 지역 지도</h2>
+                <p>전국 행정구역별 질소·인 유출 위험 지역 지도를 확인하세요. 공간 조인 기반으로 정확한 수질 현황을 시각화합니다.</p>
+                <a href="/map" class="btn">지도 보기</a>
+            </div>
+            
+            <div class="nav-card">
+                <h2>📊 대시보드</h2>
+                <p>수질 데이터 분석 결과와 통계 정보를 확인하세요. 경보 단계별 분포와 상세 분석을 제공합니다.</p>
+                <a href="/dashboard" class="btn btn-secondary">대시보드 보기</a>
+            </div>
+            
+            <div class="nav-card">
+                <h2>🖼️ 이미지 갤러리</h2>
+                <p>생성된 모든 수질 지도 이미지를 확인하고 다운로드할 수 있습니다.</p>
+                <a href="/gallery" class="btn btn-success">갤러리 보기</a>
+            </div>
+            
+            <div class="nav-card">
+                <h2>📤 이미지 업로드</h2>
+                <p>새로운 수질 지도 이미지를 업로드하여 갤러리에 추가하세요.</p>
+                <a href="/upload" class="btn btn-secondary">이미지 업로드</a>
+            </div>
+            
+            <div class="nav-card">
+                <h2>🔍 실시간 모니터링</h2>
+                <p>API를 통해 실시간 수질 데이터를 확인하고 시스템 상태를 모니터링하세요.</p>
+                <a href="/api/status" class="btn btn-success">API 상태 확인</a>
+            </div>
+        </div>
+        
+        <div class="status">
+            <h3>✅ 시스템 상태</h3>
+            <p>수질 모니터링 시스템이 정상적으로 실행 중입니다.</p>
+            <p>마지막 업데이트: <span id="lastUpdate"></span></p>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 수질 모니터링 시스템 - 전국 수질 현황 분석 및 시각화</p>
+        </div>
+    </div>
+    
+    <script>
+        // 마지막 업데이트 시간 표시
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleString('ko-KR');
+        
+        // 페이지 로드 시 애니메이션
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.nav-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.6s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html> 

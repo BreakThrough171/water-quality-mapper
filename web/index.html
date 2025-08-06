@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수질 모니터링 시스템</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Malgun Gothic', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            margin: 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 20px;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-color: #667eea;
+        }
+        .card-content h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 1.5em;
+        }
+        .card-content p {
+            margin: 0;
+            color: #666;
+            line-height: 1.6;
+        }
+        .info {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        .info h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+        .update-time {
+            color: #6c757d;
+            font-size: 0.9em;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌊 수질 모니터링 시스템</h1>
+            <p>전국 수질 데이터 분석 및 시각화</p>
+        </div>
+        
+        <div class="content">
+            <div class="cards">
+                <a href="map_20250806_104238.html" class="card"><div class="card-content"><h3>🗺️ 수질 모니터링 지도</h3><p>전국 수질 측정소 데이터를 기반으로 한 지도</p></div></a>
+                <a href="dashboard_20250806_104238.html" class="card"><div class="card-content"><h3>📊 수질 분석 대시보드</h3><p>수질 데이터 분석 결과 및 차트</p></div></a>
+            </div>
+            
+            <div class="info">
+                <h3>📋 시스템 정보</h3>
+                <p>이 시스템은 환경부 수질 DB API를 활용하여 전국의 수질 데이터를 수집하고 분석합니다.</p>
+                <ul>
+                    <li><strong>데이터 소스:</strong> 환경부 수질 DB API</li>
+                    <li><strong>분석 항목:</strong> TP(총인), TN(총질소)</li>
+                    <li><strong>가중치:</strong> TP 0.99, TN 0.01</li>
+                    <li><strong>업데이트:</strong> 자동 스케줄링</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 수질 모니터링 시스템</p>
+        </div>
+    </div>
+    
+    <div class="update-time">
+        마지막 업데이트: 2025-08-06 10:42:38
+    </div>
+</body>
+</html>

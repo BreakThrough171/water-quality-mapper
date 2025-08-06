@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이미지 갤러리 - 수질 모니터링 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .gallery-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .gallery-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .upload-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #00b894, #00a085);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .upload-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .image-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .image-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .image-container {
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .gallery-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .image-info {
+            padding: 15px 0;
+        }
+        
+        .image-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .image-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+        
+        .image-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .view-btn {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+        }
+        
+        .download-btn {
+            background: linear-gradient(45deg, #00b894, #00a085);
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .stats-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #74b9ff;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .no-images {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .no-images h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #74b9ff;
+        }
+        
+        .no-images p {
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .gallery-header h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>🖼️ 이미지 갤러리</h1>
+            <div class="nav-links">
+                <a href="/">🏠 홈</a>
+                <a href="/map">🗺️ 지도</a>
+                <a href="/dashboard">📊 대시보드</a>
+                <a href="/upload">📤 업로드</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="gallery-header">
+            <h2>수질 지도 이미지 갤러리</h2>
+            <p>생성된 모든 수질 지도 이미지를 확인하고 다운로드할 수 있습니다.</p>
+            <a href="/upload" class="upload-btn">📤 새 이미지 업로드</a>
+        </div>
+        
+        <div class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalImages">-</div>
+                    <div class="stat-label">총 이미지 수</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalSize">-</div>
+                    <div class="stat-label">총 용량</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="latestImage">-</div>
+                    <div class="stat-label">최신 이미지</div>
+                </div>
+            </div>
+        </div>
+        
+        {% if images %}
+        <div class="gallery-grid">
+            {% for image in images %}
+            <div class="image-card">
+                <div class="image-container">
+                    <img src="{{ image.url }}" alt="{{ image.filename }}" class="gallery-image" loading="lazy">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">{{ image.filename }}</div>
+                    <div class="image-details">
+                        <span>📏 {{ image.size }}</span>
+                        <span>📅 {{ image.date }}</span>
+                    </div>
+                    <div class="image-actions">
+                        <a href="{{ image.url }}" target="_blank" class="action-btn view-btn">👁️ 보기</a>
+                        <a href="{{ image.url }}" download class="action-btn download-btn">📥 다운로드</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-images">
+            <h3>📸 이미지가 없습니다</h3>
+            <p>아직 업로드된 이미지가 없습니다. 첫 번째 이미지를 업로드해보세요!</p>
+            <a href="/upload" class="upload-btn">📤 이미지 업로드</a>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        // 통계 데이터 로드
+        function loadStats() {
+            fetch('/api/images')
+                .then(response => response.json())
+                .then(data => {
+                    const images = data.images;
+                    const totalImages = images.length;
+                    const totalSize = images.reduce((sum, img) => sum + parseFloat(img.size_mb), 0);
+                    const latestImage = images.length > 0 ? images[0].filename : '없음';
+                    
+                    document.getElementById('totalImages').textContent = totalImages;
+                    document.getElementById('totalSize').textContent = totalSize.toFixed(1) + ' MB';
+                    document.getElementById('latestImage').textContent = latestImage;
+                })
+                .catch(error => {
+                    console.error('통계 로드 실패:', error);
+                });
+        }
+        
+        // 페이지 로드 시 통계 로드
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStats();
+            
+            // 이미지 카드 애니메이션
+            const imageCards = document.querySelectorAll('.image-card');
+            imageCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.6s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html> 

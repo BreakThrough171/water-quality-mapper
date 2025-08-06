@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: water-quality-monitor
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python web_server.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_APP
+        value: web_server.py
+    healthCheckPath: /
+    autoDeploy: true
+    plan: free
+
+  - type: worker
+    name: water-quality-scheduler
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python auto_updater.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+    plan: free 

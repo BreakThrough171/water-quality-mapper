@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>전라남도 하천 수질 고위험 지역 지도 (샘플)</title>
+    <style>
+        body { margin:0; }
+        #map { width: 100vw; height: 100vh; }
+        .legend, .stats {
+            position: fixed; background: white; border: 1px solid #888; padding: 10px; z-index: 9999;
+            font-size: 14px; border-radius: 8px;
+        }
+        .legend { left: 30px; bottom: 30px; }
+        .stats { right: 30px; top: 30px; }
+        .legend span { display: inline-block; width: 18px; height: 18px; border-radius: 50%; margin-right: 8px; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="legend">
+        <b>위험도 범례</b><br>
+        <span style="background:#FF0000"></span> 매우 위험<br>
+        <span style="background:#FFA500"></span> 위험<br>
+        <span style="background:#FFFF00"></span> 보통<br>
+        <span style="background:#90EE90"></span> 안전<br>
+        <span style="background:#00FF00"></span> 매우 안전<br>
+    </div>
+    <div class="stats">
+        <b>통계 정보</b><br>
+        총 시군구: 22개<br>
+        <span style="color:#FF0000">●</span> 매우 위험: 2개 (9%)<br>
+        <span style="color:#FFA500">●</span> 위험: 4개 (18%)<br>
+        <span style="color:#FFFF00">●</span> 보통: 8개 (36%)<br>
+        <span style="color:#90EE90">●</span> 안전: 6개 (27%)<br>
+        <span style="color:#00FF00">●</span> 매우 안전: 2개 (9%)<br>
+    </div>
+    <!-- 지도 샘플 이미지는 삭제되었습니다. 실제 결과물은 Folium이 자동 생성합니다. -->
+    <div style="position:fixed;top:10px;width:100vw;text-align:center;z-index:10000;">
+        <h2>전라남도 하천 수질 고위험 지역 지도 (샘플)</h2>
+        <small>생성일시: 2024-08-01 15:00</small>
+    </div>
+</body>
+</html>

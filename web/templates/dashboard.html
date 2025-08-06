@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대시보드 - 수질 모니터링 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #74b9ff;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .dashboard-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .section-title p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .alert-distribution {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .alert-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .alert-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .alert-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .alert-count {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #74b9ff;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .data-table th {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+            color: #74b9ff;
+        }
+        
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chart-placeholder {
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+        }
+        
+        .chart-placeholder p {
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+        
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-card h3 {
+            margin-bottom: 15px;
+            color: #74b9ff;
+            font-size: 1.3rem;
+        }
+        
+        .info-card p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .refresh-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #00b894, #00a085);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .refresh-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .alert-distribution {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .data-table {
+                font-size: 0.9rem;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>📊 대시보드</h1>
+            <div class="nav-links">
+                <a href="/">🏠 홈</a>
+                <a href="/map">🗺️ 지도</a>
+                <a href="/api/status">🔍 API 상태</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🌊</div>
+                <div class="stat-number" id="totalStations">-</div>
+                <div class="stat-label">전체 측정소</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-number" id="activeRegions">-</div>
+                <div class="stat-label">활성 지역</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-number" id="alertCount">-</div>
+                <div class="stat-label">경보 지역</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔄</div>
+                <div class="stat-number" id="lastUpdate">-</div>
+                <div class="stat-label">마지막 업데이트</div>
+            </div>
+        </div>
+        
+        <div class="dashboard-section">
+            <div class="section-title">
+                <h2>📊 경보 단계별 분포</h2>
+                <p>전국 행정구역별 수질 경보 단계 분포 현황</p>
+            </div>
+            
+            <div class="alert-distribution">
+                <div class="alert-item">
+                    <div class="alert-color" style="background-color: #2E8B57;"></div>
+                    <div class="alert-name">정상</div>
+                    <div class="alert-count" id="normalCount">-</div>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-color" style="background-color: #90EE90;"></div>
+                    <div class="alert-name">1단계</div>
+                    <div class="alert-count" id="level1Count">-</div>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-color" style="background-color: #FFFF00;"></div>
+                    <div class="alert-name">2단계</div>
+                    <div class="alert-count" id="level2Count">-</div>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-color" style="background-color: #FFA500;"></div>
+                    <div class="alert-name">3단계</div>
+                    <div class="alert-count" id="level3Count">-</div>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-color" style="background-color: #FF6347;"></div>
+                    <div class="alert-name">4단계</div>
+                    <div class="alert-count" id="level4Count">-</div>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-color" style="background-color: #FF0000;"></div>
+                    <div class="alert-name">5단계</div>
+                    <div class="alert-count" id="level5Count">-</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-section">
+            <div class="section-title">
+                <h2>📈 수질 분석 차트</h2>
+                <p>총인(TP)과 총질소(TN) 값의 분포 및 추세 분석</p>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-placeholder">
+                    <p>📊 차트 데이터 로딩 중...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-section">
+            <div class="section-title">
+                <h2>📋 상세 데이터</h2>
+                <p>행정구역별 수질 평가 상세 정보</p>
+            </div>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>행정구역</th>
+                        <th>총인(TP) mg/L</th>
+                        <th>총질소(TN) mg/L</th>
+                        <th>가중치 점수</th>
+                        <th>경보 단계</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTableBody">
+                    <tr>
+                        <td colspan="5" style="text-align: center;">데이터 로딩 중...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="info-cards">
+            <div class="info-card">
+                <h3>🎯 평가 기준</h3>
+                <p>총인(TP)과 총질소(TN) 값을 99:1 비율로 가중치를 적용하여 계산합니다. 백분위 기반으로 5단계 경보 시스템을 적용합니다.</p>
+            </div>
+            <div class="info-card">
+                <h3>📊 데이터 소스</h3>
+                <p>국립환경과학원 수질 DB의 실시간 측정 데이터를 기반으로 분석합니다. 공간 조인을 통해 정확한 행정구역 매칭을 수행합니다.</p>
+            </div>
+            <div class="info-card">
+                <h3>🔄 업데이트 주기</h3>
+                <p>실시간으로 수질 데이터를 수집하고 분석하여 대시보드를 업데이트합니다. 최신 수질 현황을 반영합니다.</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="refresh-btn" onclick="refreshData()">
+                🔄 데이터 새로고침
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // 샘플 데이터 (실제로는 API에서 가져올 데이터)
+        const sampleData = {
+            totalStations: 1250,
+            activeRegions: 85,
+            alertCount: 12,
+            lastUpdate: new Date().toLocaleString('ko-KR'),
+            alertDistribution: {
+                normal: 45,
+                level1: 20,
+                level2: 15,
+                level3: 8,
+                level4: 3,
+                level5: 1
+            },
+            detailedData: [
+                { region: '서울시 강남구', tp: 0.05, tn: 1.2, score: 0.057, alert: '정상' },
+                { region: '부산시 해운대구', tp: 0.08, tn: 1.5, score: 0.081, alert: '1단계' },
+                { region: '대구시 수성구', tp: 0.12, tn: 2.1, score: 0.123, alert: '2단계' },
+                { region: '인천시 연수구', tp: 0.15, tn: 2.8, score: 0.158, alert: '3단계' },
+                { region: '광주시 서구', tp: 0.22, tn: 3.5, score: 0.227, alert: '4단계' },
+                { region: '대전시 유성구', tp: 0.35, tn: 4.2, score: 0.357, alert: '5단계' }
+            ]
+        };
+        
+        // 데이터 로드 함수
+        function loadDashboardData() {
+            // 통계 데이터 업데이트
+            document.getElementById('totalStations').textContent = sampleData.totalStations.toLocaleString();
+            document.getElementById('activeRegions').textContent = sampleData.activeRegions.toLocaleString();
+            document.getElementById('alertCount').textContent = sampleData.alertCount.toLocaleString();
+            document.getElementById('lastUpdate').textContent = sampleData.lastUpdate;
+            
+            // 경보 분포 업데이트
+            document.getElementById('normalCount').textContent = sampleData.alertDistribution.normal;
+            document.getElementById('level1Count').textContent = sampleData.alertDistribution.level1;
+            document.getElementById('level2Count').textContent = sampleData.alertDistribution.level2;
+            document.getElementById('level3Count').textContent = sampleData.alertDistribution.level3;
+            document.getElementById('level4Count').textContent = sampleData.alertDistribution.level4;
+            document.getElementById('level5Count').textContent = sampleData.alertDistribution.level5;
+            
+            // 상세 데이터 테이블 업데이트
+            const tableBody = document.getElementById('dataTableBody');
+            tableBody.innerHTML = '';
+            
+            sampleData.detailedData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.region}</td>
+                    <td>${item.tp.toFixed(3)}</td>
+                    <td>${item.tn.toFixed(1)}</td>
+                    <td>${item.score.toFixed(3)}</td>
+                    <td>${item.alert}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // 데이터 새로고침 함수
+        function refreshData() {
+            // 로딩 상태 표시
+            document.getElementById('totalStations').textContent = '로딩...';
+            document.getElementById('activeRegions').textContent = '로딩...';
+            document.getElementById('alertCount').textContent = '로딩...';
+            
+            // 1초 후 데이터 업데이트 (실제로는 API 호출)
+            setTimeout(() => {
+                loadDashboardData();
+                alert('데이터가 새로고침되었습니다!');
+            }, 1000);
+        }
+        
+        // 페이지 로드 시 데이터 로드
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboardData();
+            
+            // 애니메이션 효과
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.6s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>질소·인 유출 위험 지역 지도 - 수질 모니터링 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .map-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .map-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .map-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .map-title p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .map-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .map-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .map-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .legend {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .legend h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        .legend-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .legend-text {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .info-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .info-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-item h4 {
+            margin-bottom: 10px;
+            color: #74b9ff;
+        }
+        
+        .info-item p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .download-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #00b894, #00a085);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .map-title h2 {
+                font-size: 2rem;
+            }
+            
+            .legend-items {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>🗺️ 질소·인 유출 위험 지역 지도</h1>
+            <div class="nav-links">
+                <a href="/">🏠 홈</a>
+                <a href="/dashboard">📊 대시보드</a>
+                <a href="/api/status">🔍 API 상태</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="map-section">
+            <div class="map-title">
+                <h2>질소·인 유출 위험 지역 지도</h2>
+                <p>공간 조인 기반으로 정확한 수질 현황을 시각화한 지도입니다. 각 행정구역의 수질 상태를 5단계 경보 시스템으로 분류하여 표시합니다.</p>
+            </div>
+            
+            <div class="map-container">
+                <img src="/static/images/integrated_water_quality_map.png" alt="수질 지도" class="map-image" id="mapImage">
+            </div>
+            
+            <div class="legend">
+                <h3>📊 경보 단계별 색상 범례</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #2E8B57;"></div>
+                        <div class="legend-text">1단계 (수질 우수)</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #90EE90;"></div>
+                        <div class="legend-text">1단계 (수질 양호)</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #FFFF00;"></div>
+                        <div class="legend-text">2단계 (수질 보통)</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #FFA500;"></div>
+                        <div class="legend-text">3단계 (수질 나쁨)</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #FF6347;"></div>
+                        <div class="legend-text">4단계 (수질 매우 나쁨)</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #FF0000;"></div>
+                        <div class="legend-text">5단계 (수질 위험)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h3>📋 지도 정보</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <h4>🎯 평가 방법</h4>
+                    <p>총인(TP)과 총질소(TN) 값을 가중치 기반으로 계산하여 5단계 경보 시스템으로 분류합니다.</p>
+                </div>
+                <div class="info-item">
+                    <h4>🗺️ 지도 범위</h4>
+                    <p>전국 17개 시도와 주요 시군구를 포함한 행정구역별 수질 현황을 표시합니다.</p>
+                </div>
+                <div class="info-item">
+                    <h4>📊 데이터 소스</h4>
+                    <p>국립환경과학원 수질 DB의 실시간 측정 데이터를 기반으로 분석합니다.</p>
+                </div>
+                <div class="info-item">
+                    <h4>🔄 업데이트</h4>
+                    <p>실시간으로 수질 데이터를 수집하고 분석하여 지도를 업데이트합니다.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="download-section">
+            <a href="/static/images/integrated_water_quality_map.png" download class="download-btn">
+                📥 지도 이미지 다운로드
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // 이미지 로드 실패 시 대체 이미지 표시
+        document.getElementById('mapImage').onerror = function() {
+            this.src = '/static/images/map.png';
+            this.alt = '대체 지도 이미지';
+        };
+        
+        // 페이지 로드 시 애니메이션
+        document.addEventListener('DOMContentLoaded', function() {
+            const mapImage = document.getElementById('mapImage');
+            mapImage.style.opacity = '0';
+            mapImage.style.transform = 'scale(0.9)';
+            mapImage.style.transition = 'all 0.8s ease';
+            
+            setTimeout(() => {
+                mapImage.style.opacity = '1';
+                mapImage.style.transform = 'scale(1)';
+            }, 300);
+        });
+    </script>
+</body>
+</html> 
